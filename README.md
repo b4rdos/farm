@@ -21,3 +21,7 @@ The above will do the following:
 - Download a mongodb image locally
 - Build the backend image and start the service at [http://localhost:50500/docs](http://localhost:50500/docs)
 - Build the frontend image and start the service at [http://localhost:3000](http://localhost:3000)
+
+---
+TODO: Figure out how to deal with CORS calls in react so I don't have to hard code the localhost port.
+TODO: Figure out how to configure webpack's websocket port.
