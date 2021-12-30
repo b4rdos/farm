@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  db:
+    image: mongo:5.0.5
+    volumes:
+      - type: volume
+        source: mongodb
+        target: /data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: p4$$word
+    restart: always
+
+  backend:
+    image: backend:0.1.0-alpha
+    build: ./backend
+    ports:
+      - "50500:80"
+    volumes:
+      - type: bind
+        source: ./backend/app
+        target: /code/app
+    environment:
+      MONGO_USERNAME: root
+      MONGO_PASSWORD: p4$$word
+      MONGO_URL: mongodb://root:p4$$word@db:27017/
+    command: ["uvicorn", "app.main:app", "--reload", "--port", "80", "--host", "0.0.0.0"]
+    restart: always
+
+  frontend:
+    image: frontend:0.1.0-alpha
+    build: ./frontend
+    environment:
+      HTTPS: "true"
+    ports:
+      - "3000:3000"
+    volumes:
+      - type: bind
+        source: ./frontend/src
+        target: /app/src
+      - type: bind
+        source: ./frontend/public
+        target: /app/public
+    restart: always
+
+volumes:
+  mongodb:
